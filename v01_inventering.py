@@ -13,11 +13,11 @@ role_3= "Brandvägg"
 
 #här skriver den rubriken
 print("UTRUSTNINGSLISTA")
-print("-" * 52)
+print("-" * 53)
 
 print(f"{device_1:<16} {model_1:<20} {role_1}")
 print(f"{device_2:<16} {model_2:<20} {role_2}")
 print(f"{device_3:<16} {model_3:<20} {role_3}")
 
-print("-" * 52)
+print("-" * 53)
 print("Antal enheter: 3")

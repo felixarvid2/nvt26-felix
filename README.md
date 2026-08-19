@@ -1,2 +1,2 @@
 # nvt26-felix
-för nätverkstekniker utbildningen
+för nätverkstekniker kursen

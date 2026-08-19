@@ -5,5 +5,6 @@ fick inte kommandot show startup-config | include hostname att funka
 
 
 
-<img width="390" height="89" alt="image" src="https://github.com/user-attachments/assets/b187609b-9c13-428c-8326-cc2bba4f71d0" />
+
+<img width="431" height="223" alt="image" src="https://github.com/user-attachments/assets/ee01bb7b-bdd8-4754-9fad-e53c94a3eb55" />
 

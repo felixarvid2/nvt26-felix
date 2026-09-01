@@ -15,4 +15,4 @@ switch arbetar på lager 2 datalänk och router på lager tre nätverk.
 
 3.19 [typ 7 • Återblick] Din dator vill nå en server i ett annat land. Vilken MAC-adress
 frågar den efter, och varför? (Kapitel 2)
-den frågar efter stadard gatewayens MAC adress för att den ska kunna skicka en vidare
+den frågar efter default gateways MAC adress för att den ska kunna skicka oss vidare

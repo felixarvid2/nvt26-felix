@@ -84,9 +84,9 @@ ip route 192.168.2.0 255.255.255.0 10.0.0.2
 end
 write memory
 
-!=============================================
+! =============================================
 ! SWITCH 1
-!=============================================
+! =============================================
 
 enable
 configure terminal
@@ -160,9 +160,9 @@ spanning-tree vlan 10 root primary
 end
 write memory
 
-
+! =========================================
 ! SWITCH 2 (SW-nordvik-2)
-
+! =========================================
 enable
 configure terminal
 
@@ -179,7 +179,7 @@ vlan 30
 vlan 99
  name drift
 vlan 999
- name NATIVE_UNUSED
+ name NATIVE
 exit
 
 ! 2. ACCESS-PORTAR FÖR KLIENTER
@@ -223,14 +223,14 @@ spanning-tree vlan 10 root secondary
 end
 write memory
 
-!=======================================
+! =======================================
 !router borås med dhcp
-!=======================================
+! =======================================
 enable
 configure terminal
 
 hostname R-Boras-1
-! WAN-länk tillbaka till Nordvik
+! länk till Göteborg
 interface GigabitEthernet0/0/1
  ip address 10.0.0.2 255.255.255.252
  no shutdown
@@ -284,15 +284,15 @@ interface GigabitEthernet0/0/0
  no shutdown
  exit
 
-! Default route mot Göteborg
+! Statisk route mot Göteborg
 ip route 192.168.1.0  255.255.255.0 10.0.0.1
 
 end
 write memory
 
-!====================================================================
+! ====================================================================
 !Switch borås
-!====================================================================
+! ====================================================================
 enable
 configure terminal
 
@@ -350,14 +350,14 @@ configure terminal
 
 hostname R-Boras-1
 
-! WAN-länk till Göteborg
+! länk till Göteborg
 interface GigabitEthernet0/0/1
  description Länk mot Göteborg
  ip address 10.0.0.2 255.255.255.252
  no shutdown
  exit
 
-! Fysiskt gränssnitt mot switchen
+! kabeln till switchen
 interface GigabitEthernet0/0/0
  no shutdown
  exit

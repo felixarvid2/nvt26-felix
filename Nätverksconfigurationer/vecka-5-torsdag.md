@@ -1,0 +1,214 @@
+! ROUTER 1
+enable
+configure terminal
+
+hostname R-Nordvik-1
+
+! Undanta IP-adresser
+ip dhcp excluded-address 192.168.1.1 192.168.1.10
+ip dhcp excluded-address 192.168.1.65 192.168.1.74
+ip dhcp excluded-address 192.168.1.129 192.168.1.138
+ip dhcp excluded-address 192.168.1.193 192.168.1.202
+
+! DHCP Pooler
+ip dhcp pool KONTOR
+ network 192.168.1.0 255.255.255.192
+ default-router 192.168.1.1
+ dns-server 8.8.8.8
+ exit
+
+ip dhcp pool EKONOMI
+ network 192.168.1.64 255.255.255.192
+ default-router 192.168.1.65
+ dns-server 8.8.8.8
+ exit
+
+ip dhcp pool GAST
+ network 192.168.1.128 255.255.255.192
+ default-router 192.168.1.129
+ dns-server 8.8.8.8
+ exit
+
+ip dhcp pool DRIFT
+ network 192.168.1.192 255.255.255.192
+ default-router 192.168.1.193
+ dns-server 8.8.8.8
+ exit
+
+! Fysiskt interface
+interface GigabitEthernet0/0/0
+ no shutdown
+ exit
+
+! Subinterfaces (VLAN Routing)
+interface GigabitEthernet0/0/0.10
+ encapsulation dot1Q 10
+ ip address 192.168.1.1 255.255.255.192
+ exit
+
+interface GigabitEthernet0/0/0.20
+ encapsulation dot1Q 20
+ ip address 192.168.1.65 255.255.255.192
+ exit
+
+interface GigabitEthernet0/0/0.30
+ encapsulation dot1Q 30
+ ip address 192.168.1.129 255.255.255.192
+ exit
+
+interface GigabitEthernet0/0/0.99
+ encapsulation dot1Q 99
+ ip address 192.168.1.193 255.255.255.192
+ exit
+
+! Gateway of last resort
+ip route 0.0.0.0 0.0.0.0 203.0.113.1
+
+! Göteborg till Borås
+ip route 192.168.2.0 255.255.255.0 10.0.0.2
+
+end
+write memory
+
+
+! SWITCH 1
+
+enable
+configure terminal
+
+! Hostname
+hostname SW-nordvik-1
+
+! Skapa VLAN
+vlan 10
+ name KONTOR
+vlan 20
+ name EKONOMI
+vlan 30
+ name GAST
+vlan 99
+ name DRIFT
+vlan 999
+ name NATIVE_UNUSED
+exit
+
+! Access-portar
+interface range FastEthernet 0/5 - 6
+ switchport mode access
+ switchport access vlan 10
+ spanning-tree portfast
+ exit
+
+interface range FastEthernet 0/7 - 8
+ switchport mode access
+ switchport access vlan 20
+ spanning-tree portfast
+ exit
+
+interface FastEthernet 0/9
+ switchport mode access
+ switchport access vlan 30
+ spanning-tree portfast
+ exit
+
+interface FastEthernet 0/10
+ switchport mode access
+ switchport access vlan 99
+ spanning-tree portfast
+ exit
+
+! Trunk mot Switch 2
+interface GigabitEthernet 0/2
+ description Trunk mot SW-nordvik-2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30,99
+ switchport nonegotiate
+ exit
+
+! Trunk mot Router 1
+interface GigabitEthernet 0/1
+ description Trunk mot Router 1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30,99
+ switchport nonegotiate
+ exit
+
+! Port GigabitEthernet 0/0/2 mot internet
+interface GigabitEthernet0/0/2
+ description WAN / Anslutning mot Internet
+ ip address 203.0.113.2 255.255.255.0
+ no shutdown
+ exit
+
+! Sätt spanning-tree root
+spanning-tree vlan 10 root primary
+
+end
+write memory
+
+
+! SWITCH 2 (SW-nordvik-2)
+
+enable
+configure terminal
+
+! Sätt hostnamn
+hostname SW-nordvik-2
+
+! 1. SKAPA VLAN
+vlan 10
+ name KONTOR
+vlan 20
+ name EKONOMI
+vlan 30
+ name GAST
+vlan 99
+ name drift
+vlan 999
+ name NATIVE_UNUSED
+exit
+
+! 2. ACCESS-PORTAR FÖR KLIENTER
+interface range FastEthernet 0/5 - 6
+ switchport mode access
+ switchport access vlan 10
+ spanning-tree portfast
+ exit
+
+interface range FastEthernet 0/7 - 8
+ switchport mode access
+ switchport access vlan 20
+ spanning-tree portfast
+ exit
+
+interface FastEthernet 0/9
+ switchport mode access
+ switchport access vlan 30
+ spanning-tree portfast
+ exit
+
+interface FastEthernet 0/10
+ switchport mode access
+ switchport access vlan 99
+ spanning-tree portfast
+ exit
+
+! 3. TRUNK MOT SWITCH 1
+interface GigabitEthernet 0/2
+ description Trunk mot Switch 1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30,99
+ switchport nonegotiate
+ exit
+
+! Sätt spanning-tree secondary
+spanning-tree vlan 10 root secondary
+
+end
+write memory

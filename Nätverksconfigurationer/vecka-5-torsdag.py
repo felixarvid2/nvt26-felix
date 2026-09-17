@@ -339,6 +339,15 @@ interface GigabitEthernet 0/1
  switchport nonegotiate
  exit
 
+! Trunk mot SW-boras-2
+interface GigabitEthernet 0/2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 40,50,99
+ switchport nonegotiate
+ exit
+
 end
 write memory
 
@@ -383,3 +392,4 @@ ip route 192.168.1.0 255.255.255.0 10.0.0.1
 
 end
 write memory
+
